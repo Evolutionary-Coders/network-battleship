@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batalha Naval em Rede</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: monospace; background: #1a1a2e; color: #eee; padding: 20px; }
+        h1 { text-align: center; margin-bottom: 20px; color: #0f3460; }
+        .container { display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; }
+        .panel { background: #16213e; border-radius: 8px; padding: 20px; }
+
+        table.board { border-collapse: collapse; }
+        table.board th, table.board td {
+            width: 40px; height: 40px;
+            text-align: center; vertical-align: middle;
+            border: 1px solid #0f3460;
+            font-size: 14px;
+        }
+        table.board th { background: #0f3460; color: #e94560; font-weight: bold; }
+        td.water { background: #1a1a3e; }
+        td.ship-porta_avioes { background: #e94560; color: #fff; font-weight: bold; }
+        td.ship-submarino { background: #0f81c7; color: #fff; font-weight: bold; }
+        td.ship-fragata { background: #27ae60; color: #fff; font-weight: bold; }
+        td.shot-agua { background: #1a1a3e; color: #555; }
+        td.shot-acerto { background: #c0392b; color: #fff; }
+
+        .info { margin-top: 15px; }
+        .info h3 { color: #e94560; margin-bottom: 8px; }
+        .ship-list { list-style: none; }
+        .ship-list li { padding: 4px 0; }
+        .ship-list .dead { text-decoration: line-through; color: #555; }
+        .score { font-size: 20px; color: #e94560; margin-top: 10px; }
+
+        table.log { border-collapse: collapse; margin-top: 10px; width: 100%; }
+        table.log th, table.log td {
+            border: 1px solid #0f3460; padding: 4px 8px;
+            text-align: center; font-size: 12px;
+        }
+        table.log th { background: #0f3460; }
+    </style>
+</head>
+<body>
+    <h1>Batalha Naval em Rede</h1>
+    <div class="container">
+        <div class="panel">
+            <h3 style="color:#e94560; margin-bottom:10px;">Tabuleiro</h3>
+            <table class="board" id="board"></table>
+        </div>
+        <div class="panel">
+            <div class="info">
+                <h3>Navios</h3>
+                <ul class="ship-list" id="ship-list"></ul>
+            </div>
+            <div class="info">
+                <h3>Pontuacao Sofrida</h3>
+                <div class="score" id="score">0</div>
+            </div>
+            <div class="info">
+                <h3>Historico de Tiros</h3>
+                <table class="log" id="shot-log">
+                    <thead><tr><th>Linha</th><th>Coluna</th><th>Resultado</th><th>Atacante</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var ROWS = 10;
+        var COLS = 10;
+
+        function buildBoard() {
+            var board = document.getElementById('board');
+            var html = '<tr><th></th>';
+            for (var c = 0; c < COLS; c++) html += '<th>' + c + '</th>';
+            html += '</tr>';
+            for (var r = 0; r < ROWS; r++) {
+                html += '<tr><th>' + r + '</th>';
+                for (var c = 0; c < COLS; c++) {
+                    html += '<td id="cell-' + r + '-' + c + '" class="water"></td>';
+                }
+                html += '</tr>';
+            }
+            board.innerHTML = html;
+        }
+
+        function updateBoard(state) {
+            /* Reset all cells */
+            for (var r = 0; r < ROWS; r++) {
+                for (var c = 0; c < COLS; c++) {
+                    var cell = document.getElementById('cell-' + r + '-' + c);
+                    cell.className = 'water';
+                    cell.textContent = '';
+                }
+            }
+
+            /* Draw ships */
+            for (var i = 0; i < state.navios.length; i++) {
+                var ship = state.navios[i];
+                if (ship.vivo) {
+                    var cell = document.getElementById('cell-' + ship.linha + '-' + ship.coluna);
+                    cell.className = 'ship-' + ship.tipo;
+                    cell.textContent = ship.tipo.charAt(0).toUpperCase();
+                }
+            }
+
+            /* Draw shots */
+            for (var i = 0; i < state.tiros.length; i++) {
+                var shot = state.tiros[i];
+                var cell = document.getElementById('cell-' + shot.linha + '-' + shot.coluna);
+                if (shot.resultado === 'acerto') {
+                    cell.className = 'shot-acerto';
+                    cell.textContent = 'X';
+                } else if (shot.resultado === 'agua') {
+                    cell.className = 'shot-agua';
+                    cell.textContent = 'O';
+                }
+            }
+
+            /* Ship list */
+            var list = document.getElementById('ship-list');
+            var html = '';
+            for (var i = 0; i < state.navios.length; i++) {
+                var ship = state.navios[i];
+                var cls = ship.vivo ? '' : ' class="dead"';
+                var status = ship.vivo ? 'ativo' : 'destruido';
+                html += '<li' + cls + '>' + ship.tipo + ' (linha ' + ship.linha + ') - ' + status + '</li>';
+            }
+            list.innerHTML = html;
+
+            /* Score */
+            document.getElementById('score').textContent = state.pontuacao_sofrida;
+
+            /* Shot log */
+            var tbody = document.querySelector('#shot-log tbody');
+            html = '';
+            for (var i = state.tiros.length - 1; i >= 0; i--) {
+                var shot = state.tiros[i];
+                html += '<tr><td>' + shot.linha + '</td><td>' + shot.coluna + '</td><td>' + shot.resultado + '</td><td>' + shot.atacante + '</td></tr>';
+            }
+            tbody.innerHTML = html;
+        }
+
+        function fetchState() {
+            fetch('/estado_local')
+                .then(function(res) { return res.json(); })
+                .then(function(state) { updateBoard(state); })
+                .catch(function(err) { console.error('Fetch error:', err); });
+        }
+
+        buildBoard();
+        fetchState();
+        setInterval(fetchState, 2000);
+    </script>
+</body>
+</html>
