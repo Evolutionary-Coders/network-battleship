@@ -1,0 +1,157 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f5f7fa;
+    color: #24292f;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 24px;
+    color: #0969da;
+    font-size: 28px;
+    letter-spacing: 2px;
+}
+
+.container {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.panel {
+    background: #fff;
+    border: 1px solid #d0d7de;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Board */
+table.board {
+    border-collapse: collapse;
+}
+
+table.board th,
+table.board td {
+    width: 44px;
+    height: 44px;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid #d0d7de;
+    font-size: 15px;
+    transition: background 0.3s;
+}
+
+table.board th {
+    background: #0969da;
+    color: #fff;
+    font-weight: 600;
+}
+
+td.water {
+    background: #ddf4ff;
+}
+
+td.water:hover {
+    background: #b6e3ff;
+}
+
+td.ship-porta_avioes {
+    background: #cf222e;
+    color: #fff;
+    font-weight: bold;
+}
+
+td.ship-submarino {
+    background: #0969da;
+    color: #fff;
+    font-weight: bold;
+}
+
+td.ship-fragata {
+    background: #1a7f37;
+    color: #fff;
+    font-weight: bold;
+}
+
+td.shot-agua {
+    background: #eaeef2;
+    color: #8b949e;
+}
+
+td.shot-acerto {
+    background: #ffebe9;
+    color: #cf222e;
+    font-weight: bold;
+}
+
+/* Info panel */
+.info {
+    margin-top: 18px;
+}
+
+.info-title {
+    color: #0969da;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.info h3 {
+    color: #0969da;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.ship-list {
+    list-style: none;
+}
+
+.ship-list li {
+    padding: 5px 0;
+    font-size: 14px;
+}
+
+.ship-list .alive {
+    color: #1a7f37;
+    font-weight: 600;
+}
+
+.ship-list .dead {
+    text-decoration: line-through;
+    color: #8b949e;
+}
+
+.score {
+    font-size: 24px;
+    color: #cf222e;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/* Shot log */
+table.log {
+    border-collapse: collapse;
+    margin-top: 10px;
+    width: 100%;
+}
+
+table.log th,
+table.log td {
+    border: 1px solid #d0d7de;
+    padding: 6px 10px;
+    text-align: center;
+    font-size: 13px;
+}
+
+table.log th {
+    background: #0969da;
+    color: #fff;
+}
