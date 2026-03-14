@@ -10,6 +10,7 @@
 #define MAX_TARGETS 20
 #define MAX_TOTAL_SHOTS 100
 #define BOARD_COLS 10
+#define SHOT_DELAY_MS 800
 #define RESPONSE_BUF 4096
 
 /* Attack statistics */
@@ -168,6 +169,7 @@ static void attack_target(int target_idx) {
 
             total_shots++;
             targets[target_idx].shots_fired++;
+            usleep(SHOT_DELAY_MS * 1000);
 
             if (strstr(response, "\"acerto\"")) {
                 targets[target_idx].hits++;
