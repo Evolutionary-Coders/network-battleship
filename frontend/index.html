@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batalha Naval em Rede</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <h1>Batalha Naval em Rede</h1>
+    <div class="container">
+        <div class="panel">
+            <h3 class="info-title">Tabuleiro</h3>
+            <table class="board" id="board"></table>
+        </div>
+        <div class="panel">
+            <div class="info">
+                <h3>Navios</h3>
+                <ul class="ship-list" id="ship-list"></ul>
+            </div>
+            <div class="info">
+                <h3>Pontuacao Sofrida</h3>
+                <div class="score" id="score">0</div>
+            </div>
+            <div class="info">
+                <h3>Historico de Tiros</h3>
+                <table class="log" id="shot-log">
+                    <thead>
+                        <tr>
+                            <th>Linha</th>
+                            <th>Coluna</th>
+                            <th>Resultado</th>
+                            <th>Atacante</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="/app.js"></script>
+</body>
+</html>
