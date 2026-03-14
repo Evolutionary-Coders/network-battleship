@@ -99,13 +99,13 @@ static void handle_http_request(int client_fd, const char *client_ip, GameState 
         http_send_response(client_fd, 200, "application/json", json_buf);
 
     } else if (strcmp(req.path, "/") == 0 || strcmp(req.path, "/index.html") == 0) {
-        http_send_file(client_fd, "index.html", "text/html");
+        http_send_file(client_fd, "frontend/index.html", "text/html");
 
     } else if (strcmp(req.path, "/style.css") == 0) {
-        http_send_file(client_fd, "style.css", "text/css");
+        http_send_file(client_fd, "frontend/style.css", "text/css");
 
     } else if (strcmp(req.path, "/app.js") == 0) {
-        http_send_file(client_fd, "app.js", "application/javascript");
+        http_send_file(client_fd, "frontend/app.js", "application/javascript");
 
     } else {
         http_send_response(client_fd, 404, "text/plain", "Not Found");
