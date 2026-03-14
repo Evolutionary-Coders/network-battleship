@@ -1,8 +1,6 @@
 # Batalha Naval em Rede
 
-Miniprojeto da disciplina de Sistemas Operacionais 
-
-Curso de Tecnologia em ADS, IFSC Campus São José.
+Miniprojeto da disciplina de Sistemas Operacionais — Curso de Tecnologia em ADS, IFSC Campus São José.
 
 Professor: Eraldo Silveira e Silva
 
