@@ -1,6 +1,7 @@
 #include "json.h"
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 int json_shot_result(char *buf, int buf_size, const Shot *shot) {
     if (strcmp(shot->result, "acerto") == 0) {
@@ -53,9 +54,12 @@ int json_local_state(char *buf, int buf_size, GameState *state) {
     for (int i = 0; i < state->shot_count; i++) {
         if (i > 0) offset += snprintf(buf + offset, buf_size - offset, ",");
         Shot *t = &state->shots[i];
+        char time_str[32];
+        struct tm *tm_info = localtime(&t->timestamp);
+        strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S", tm_info);
         offset += snprintf(buf + offset, buf_size - offset,
-            "{\"linha\":%d,\"coluna\":%d,\"resultado\":\"%s\",\"atacante\":\"%s\"}",
-            t->row, t->col, t->result, t->attacker_ip);
+            "{\"linha\":%d,\"coluna\":%d,\"resultado\":\"%s\",\"atacante\":\"%s\",\"horario\":\"%s\"}",
+            t->row, t->col, t->result, t->attacker_ip, time_str);
     }
 
     offset += snprintf(buf + offset, buf_size - offset,

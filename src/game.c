@@ -51,6 +51,7 @@ Shot *game_process_shot(GameState *state, int row, int col, const char *attacker
             s->col = col;
             s->result = "repetido";
             s->ship_type = NULL;
+            s->timestamp = time(NULL);
             strncpy(s->attacker_ip, attacker_ip, sizeof(s->attacker_ip) - 1);
             return s;
         }
@@ -60,6 +61,7 @@ Shot *game_process_shot(GameState *state, int row, int col, const char *attacker
     Shot *s = &state->shots[state->shot_count++];
     s->row = row;
     s->col = col;
+    s->timestamp = time(NULL);
     strncpy(s->attacker_ip, attacker_ip, sizeof(s->attacker_ip) - 1);
 
     for (int i = 0; i < NUM_SHIPS; i++) {

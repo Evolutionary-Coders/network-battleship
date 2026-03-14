@@ -73,6 +73,12 @@ static void handle_http_request(int client_fd, const char *client_ip, GameState 
         }
         int row = atoi(row_str);
         int col = atoi(col_str);
+        if (row < 0 || row >= BOARD_ROWS || col < 0 || col >= BOARD_COLS) {
+            http_send_response(client_fd, 400, "application/json",
+                "{\"erro\":\"parametros fora da faixa do tabuleiro\"}");
+            close(client_fd);
+            return;
+        }
 
         Shot *shot = game_process_shot(state, row, col, req.client_ip);
 
@@ -108,7 +114,8 @@ static void handle_http_request(int client_fd, const char *client_ip, GameState 
         http_send_file(client_fd, "frontend/app.js", "application/javascript");
 
     } else {
-        http_send_response(client_fd, 404, "text/plain", "Not Found");
+        http_send_response(client_fd, 404, "application/json",
+            "{\"erro\":\"comando_invalido\"}");
     }
 
     close(client_fd);

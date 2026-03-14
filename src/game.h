@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <sys/types.h>
+#include <time.h>
 
 #define BOARD_ROWS 10
 #define BOARD_COLS 10
@@ -25,6 +26,7 @@ typedef struct {
     const char *result;
     const char *ship_type;
     char attacker_ip[46];
+    time_t timestamp;
 } Shot;
 
 typedef struct {
